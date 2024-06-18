@@ -13,22 +13,31 @@ in
   version ? package.version,
   env ? "production",
   src,
-}:
+  ...
+}@args:
 
-stdenv.mkDerivation {
-  inherit
-    name
-    src
-    version
-    nodejs
-    ;
-  nativeBuildInputs = nativeBuildInputs ++ [ importNpmLock.npmConfigHook ];
-  npmDeps = importNpmLock { npmRoot = src; };
-  buildPhase = ''
-    npm ci
-    ng build --configuration=${env}
-  '';
-  installPhase = ''
-    cp -r dist $out
-  '';
-}
+stdenv.mkDerivation (
+  {
+    inherit
+      name
+      src
+      version
+      nodejs
+      ;
+    npmDeps = importNpmLock { npmRoot = src; };
+    buildPhase = ''
+      npm ci
+      ng build --configuration=${env}
+    '';
+    installPhase = ''
+      cp -r dist $out
+    '';
+  }
+  // args
+  // {
+    nativeBuildInputs =
+      nativeBuildInputs
+      ++ [ importNpmLock.npmConfigHook ]
+      ++ (lib.optionals (args ? nativeBuildInputs) args.nativeBuildInputs);
+  }
+)

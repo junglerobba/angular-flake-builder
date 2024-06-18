@@ -12,7 +12,7 @@
         pkgs = inputs.nixpkgs.legacyPackages.${system};
       in
       {
-        lib = pkgs.callPackage ./lib.nix {};
+        lib = pkgs.callPackage ./lib.nix { };
         devShells.default = pkgs.mkShell { };
       }
     );

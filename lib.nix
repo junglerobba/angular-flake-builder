@@ -30,7 +30,7 @@ let
     {
       name ? defaultProject,
     }:
-    forAllEnvsWithName defaultProject;
+    forAllEnvsWithName name;
 
   nativeBuildInputs = [
     nodejs

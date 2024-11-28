@@ -9,10 +9,6 @@ Helper lib for building angular projects with nix
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
-    angular-language-server = {
-      url = "github:junglerobba/angular-language-server.nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     angular-builder = {
       url = "github:junglerobba/angular-flake-builder";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -40,19 +36,23 @@ Helper lib for building angular projects with nix
       in
       {
         packages = builtins.listToAttrs (
-          # forAllEnvs optionally takes a project name (as specified in `angular.json`),
-          # and will otherwise use the first one
-          forAllEnvs { } (env: {
-            name = "dist:${env}";
-            # name and version are read from package.json by default,
-            # but can also be provided here instead
-            value = buildAngularApp { inherit src env; };
-          })
+          forAllEnvs
+            {
+              # forAllEnvs optionally takes a project name (as specified in `angular.json`),
+              # and will otherwise use the first one
+              name = "demo-project";
+            }
+            (env: {
+              name = "dist:${env}";
+              # name and version are read from package.json by default,
+              # but can also be provided here instead
+              value = buildAngularApp { inherit src env; };
+            })
         );
         # any arguments for `pkgs.mkShell` are supported here, nodejs and angular cli are always provided by default
         devShells.default = lib.mkShell {
           nativeBuildInputs = with pkgs; [
-            inputs.angular-language-server.packages.${system}.default
+            angular-language-server
             nodePackages.eslint
             nodePackages.prettier
             nodePackages.typescript-language-server

@@ -25,7 +25,7 @@ Helper lib for building angular projects with nix
         src = pkgs.lib.cleanSource ./.;
         lib = inputs.angular-builder.lib.${system} {
           # uses `pkgs.nodejs` by default
-          inherit nodejs;
+          nodejsPackage = nodejs;
           # `packageRoot` can be provided instead of these two
           # in order to just read the files from their default location
           angularJson = ./angular.json;

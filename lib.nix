@@ -1,16 +1,16 @@
 {
-  pkgs ? import <nixpkgs> { },
+  lib,
+  callPackage,
+  nodejs,
 }:
-with pkgs.lib;
-
 {
   packageRoot ? null,
   angularJson ? "${packageRoot}/angular.json",
   packageJson ? "${packageRoot}/package.json",
-  nodejs ? pkgs.nodejs,
+  nodejsPackage ? nodejs,
 }:
 let
-  angular = importJSON angularJson;
+  angular = lib.importJSON angularJson;
   envs =
     name:
     let
@@ -24,7 +24,7 @@ let
     in
     builtins.elemAt projects 0;
 
-  forAllEnvsWithName = name: fn: (builtins.map fn (envs name));
+  forAllEnvsWithName = name: fn: (map fn (envs name));
 
   forAllEnvs =
     {
@@ -33,11 +33,14 @@ let
     forAllEnvsWithName name;
 
   nativeBuildInputs = [
-    nodejs
-    nodejs.passthru.python
+    nodejsPackage
+    nodejsPackage.passthru.python
   ];
 
-  buildAngularApp = pkgs.callPackage ./angular.nix { inherit packageJson nativeBuildInputs nodejs; };
+  buildAngularApp = callPackage ./angular.nix {
+    inherit packageJson nativeBuildInputs;
+    nodejs = nodejsPackage;
+  };
 
 in
 {

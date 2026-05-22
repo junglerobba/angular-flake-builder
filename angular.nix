@@ -1,10 +1,11 @@
 {
-  pkgs ? import <nixpkgs> { },
+  lib,
+  stdenv,
+  importNpmLock,
+  nodejs,
   packageJson,
   nativeBuildInputs,
-  nodejs,
 }:
-with pkgs;
 let
   package = lib.importJSON packageJson;
 in

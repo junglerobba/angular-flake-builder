@@ -39,22 +39,11 @@ let
 
   buildAngularApp = pkgs.callPackage ./angular.nix { inherit packageJson nativeBuildInputs nodejs; };
 
-  mkShell =
-    { ... }@args:
-    pkgs.mkShell (
-      args
-      // {
-        name = defaultProject;
-        nativeBuildInputs =
-          nativeBuildInputs ++ (optionals (args ? nativeBuildInputs) args.nativeBuildInputs);
-      }
-    );
 in
 {
   inherit
     defaultProject
     forAllEnvs
     buildAngularApp
-    mkShell
     ;
 }

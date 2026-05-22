@@ -49,16 +49,6 @@ Helper lib for building angular projects with nix
               value = buildAngularApp { inherit src env; };
             })
         );
-        # any arguments for `pkgs.mkShell` are supported here, nodejs and angular cli are always provided by default
-        devShells.default = lib.mkShell {
-          nativeBuildInputs = with pkgs; [
-            angular-language-server
-            nodePackages.eslint
-            nodePackages.prettier
-            nodePackages.typescript-language-server
-            vscode-langservers-extracted
-          ];
-        };
       }
     );
 }

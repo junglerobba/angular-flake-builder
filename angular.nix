@@ -27,7 +27,7 @@ stdenv.mkDerivation (
     npmDeps = importNpmLock { npmRoot = src; };
     buildPhase = ''
       npm ci
-      ng build --configuration=${env}
+      npx ng build --configuration=${env}
     '';
     installPhase = ''
       cp -r dist $out

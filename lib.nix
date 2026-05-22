@@ -35,7 +35,6 @@ let
   nativeBuildInputs = [
     nodejs
     nodejs.passthru.python
-    pkgs.nodePackages."@angular/cli"
   ];
 
   buildAngularApp = pkgs.callPackage ./angular.nix { inherit packageJson nativeBuildInputs nodejs; };

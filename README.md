@@ -46,7 +46,10 @@ Helper lib for building angular projects with nix
               name = "dist:${env}";
               # name and version are read from package.json by default,
               # but can also be provided here instead
-              value = buildAngularApp { inherit src env; };
+              value = buildAngularApp {
+                inherit src;
+                environment = env;
+              };
             })
         );
       }

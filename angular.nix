@@ -12,7 +12,7 @@ in
 {
   name ? package.name,
   version ? package.version,
-  env ? "production",
+  environment ? "production",
   src,
   ...
 }@args:
@@ -28,7 +28,7 @@ stdenv.mkDerivation (
     npmDeps = importNpmLock { npmRoot = src; };
     buildPhase = ''
       npm ci
-      npx ng build --configuration=${env}
+      npx ng build --configuration=${environment}
     '';
     installPhase = ''
       cp -r dist $out

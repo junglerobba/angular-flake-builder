@@ -3,6 +3,7 @@
   stdenv,
   importNpmLock,
   nodejs,
+  node-gyp-build,
   packageJson,
   nativeBuildInputs,
 }:
@@ -27,8 +28,14 @@ stdenv.mkDerivation (
       ;
     npmDeps = importNpmLock { npmRoot = src; };
     buildPhase = ''
+      runHook preBuild
+
+      export NG_CLI_ANALYTICS="false"
+
       npm ci
-      npx ng build --configuration=${environment}
+      patchShebangs node_modules
+
+      runHook postBuild
     '';
     installPhase = ''
       cp -r dist $out
@@ -38,7 +45,10 @@ stdenv.mkDerivation (
   // {
     nativeBuildInputs =
       nativeBuildInputs
-      ++ [ importNpmLock.npmConfigHook ]
+      ++ [
+        importNpmLock.npmConfigHook
+        node-gyp-build
+      ]
       ++ (lib.optionals (args ? nativeBuildInputs) args.nativeBuildInputs);
   }
 )

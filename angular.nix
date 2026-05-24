@@ -15,6 +15,7 @@ in
   version ? package.version,
   environment ? "production",
   src,
+  ngBuildFlags ? [ ],
   ...
 }@args:
 
@@ -34,6 +35,8 @@ stdenv.mkDerivation (
 
       npm ci
       patchShebangs node_modules
+      npx ng build --configuration=${environment} \
+        ${lib.concatStringsSep "\\n" ngBuildFlags}
 
       runHook postBuild
     '';

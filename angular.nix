@@ -4,6 +4,7 @@
   importNpmLock,
   nodejs,
   packageJson,
+  defaultProject,
   nativeBuildInputs,
 }:
 let
@@ -15,6 +16,7 @@ in
   environment ? "production",
   src,
   ngBuildFlags ? [ ],
+  project ? defaultProject,
   ...
 }@args:
 
@@ -34,7 +36,7 @@ buildNpmPackage (
 
       export NG_CLI_ANALYTICS="false"
 
-      npx ng build --configuration=${environment} \
+      npx ng build ${project} --configuration=${environment} \
         ${lib.concatStringsSep "\\n" ngBuildFlags}
 
       runHook postBuild

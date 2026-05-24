@@ -49,6 +49,9 @@ Helper lib for building angular projects with nix
               value = buildAngularApp {
                 inherit src;
                 environment = env;
+                # project name from `angular.json`, will pick the first one same as
+                # `forAllEnvs` if omitted
+                project = "demo-project";
               };
             })
         );

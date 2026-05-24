@@ -38,7 +38,7 @@ let
   ];
 
   buildAngularApp = callPackage ./angular.nix {
-    inherit packageJson nativeBuildInputs;
+    inherit packageJson nativeBuildInputs defaultProject;
     nodejs = nodejsPackage;
   };
 

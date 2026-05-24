@@ -1,9 +1,8 @@
 {
   lib,
-  stdenv,
+  buildNpmPackage,
   importNpmLock,
   nodejs,
-  node-gyp-build,
   packageJson,
   nativeBuildInputs,
 }:
@@ -19,7 +18,7 @@ in
   ...
 }@args:
 
-stdenv.mkDerivation (
+buildNpmPackage (
   {
     pname = name;
     inherit
@@ -28,13 +27,13 @@ stdenv.mkDerivation (
       nodejs
       ;
     npmDeps = importNpmLock { npmRoot = src; };
+    npmConfigHook = importNpmLock.npmConfigHook;
+
     buildPhase = ''
       runHook preBuild
 
       export NG_CLI_ANALYTICS="false"
 
-      npm ci
-      patchShebangs node_modules
       npx ng build --configuration=${environment} \
         ${lib.concatStringsSep "\\n" ngBuildFlags}
 
@@ -47,11 +46,6 @@ stdenv.mkDerivation (
   // args
   // {
     nativeBuildInputs =
-      nativeBuildInputs
-      ++ [
-        importNpmLock.npmConfigHook
-        node-gyp-build
-      ]
-      ++ (lib.optionals (args ? nativeBuildInputs) args.nativeBuildInputs);
+      nativeBuildInputs ++ (lib.optionals (args ? nativeBuildInputs) args.nativeBuildInputs);
   }
 )

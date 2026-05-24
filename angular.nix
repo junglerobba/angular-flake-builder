@@ -6,6 +6,7 @@
   packageJson,
   defaultProject,
   nativeBuildInputs,
+  outputPathFn,
 }:
 let
   package = lib.importJSON packageJson;
@@ -17,6 +18,7 @@ in
   src,
   ngBuildFlags ? [ ],
   project ? defaultProject,
+  outputPath ? outputPathFn project,
   ...
 }@args:
 
@@ -42,7 +44,7 @@ buildNpmPackage (
       runHook postBuild
     '';
     installPhase = ''
-      cp -r dist $out
+      mv ${outputPath} $out
     '';
   }
   // args

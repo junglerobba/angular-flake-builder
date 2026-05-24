@@ -24,6 +24,21 @@ let
     in
     builtins.elemAt projects 0;
 
+  outputPathFn =
+    project:
+    let
+      options = angular.projects.${project}.architect.build.options;
+      hasOverride = options ? outputPath;
+      isString = hasOverride && builtins.isString options.outputPath;
+      isAttrs = hasOverride && builtins.isAttrs options.outputPath;
+    in
+    if isString then
+      options.outputPath
+    else if isAttrs then
+      options.outputPath.base or "dist"
+    else
+      "dist";
+
   forAllEnvsWithName = name: fn: (map fn (envs name));
 
   forAllEnvs =
@@ -38,7 +53,12 @@ let
   ];
 
   buildAngularApp = callPackage ./angular.nix {
-    inherit packageJson nativeBuildInputs defaultProject;
+    inherit
+      packageJson
+      nativeBuildInputs
+      defaultProject
+      outputPathFn
+      ;
     nodejs = nodejsPackage;
   };
 

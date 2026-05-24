@@ -21,8 +21,8 @@ in
 
 stdenv.mkDerivation (
   {
+    pname = name;
     inherit
-      name
       src
       version
       nodejs
